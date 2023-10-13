@@ -1,5 +1,39 @@
 import numpy as np
 import pandas as pd
+import re
+
+def text2df(text):
+    if isinstance(text, dict):
+        for k in list(text):
+            k_new = re.sub(r'[^\w\s]', '', k.lower())
+            text[k_new] = text.pop(k)
+        words_per_data = [[word for word in k.split()] for k in text.keys()]
+        uniq_words = list(set([word for sublist in words_per_data for word in sublist]))
+        data = pd.DataFrame(np.zeros((len(text), len(uniq_words) + 1)), columns=uniq_words + ['y'])
+        idx = 0
+        for k in text.keys():
+            for word in k.split():
+                data.loc[idx, word] += 1
+            if text[k] == 'spam':
+                data.loc[idx, 'y'] = 1
+            elif text[k] == 'ham':
+                data.loc[idx, 'y'] = 0
+            idx += 1
+        return data
+    elif isinstance(text, list):
+        for i in range(len(text)):
+            text[i] = re.sub(r'[^\w\s]', '', text[i].lower())
+        words_per_data = [[word for word in k.split()] for k in text]
+        uniq_words = list(set([word for sublist in words_per_data for word in sublist]))
+        data = pd.DataFrame(np.zeros((len(text), len(uniq_words))), columns=uniq_words)
+        idx = 0
+        for k in text:
+            for word in k.split():
+                data.loc[idx, word] += 1
+            idx += 1
+        return data
+    else:
+        raise ValueError('Labelled text must be a dictionary and unlabelled text must be a list.')
 
 def splitTrainTest(x, y, train_ratio=0.8):
     '''

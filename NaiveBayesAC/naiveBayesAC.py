@@ -29,7 +29,10 @@ class NaiveBayesAC:
         for cls in self.classes:
             likelihood = 1
             for col in x.index:
-                likelihood *= self.likelihood[cls][col][x[col]]
+                try:
+                    likelihood *= self.likelihood[cls][col][x[col]]
+                except:
+                    likelihood *= 1 / (len(np.unique(x[col])) + 1)
             posteriors.append(self.cls_prob[cls] * likelihood)
         return self.classes[np.argmax(posteriors)]
 

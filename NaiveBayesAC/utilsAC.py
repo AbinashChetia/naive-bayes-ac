@@ -56,3 +56,10 @@ def normMinMax(df, mode='train', train_min=None, train_max=None):
         for col in data.columns:
             data[col] = (data[col] - train_min[col]) / (train_max[col] - train_min[col])
         return data
+    
+def get_acc(y, pred):
+    acc = 0
+    for i in range(len(pred)):
+        if pred[i] == y[i]:
+            acc += 1
+    return acc / len(pred)

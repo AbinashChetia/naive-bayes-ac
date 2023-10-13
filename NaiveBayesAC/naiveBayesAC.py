@@ -19,7 +19,7 @@ class NaiveBayesAC:
             for col in X.columns:
                 self.likelihood[cls][col] = {}
                 for val in np.unique(X[col]):
-                    self.likelihood[cls][col][val] = X[(X[col] == val) & (y == cls)].shape[0] / X[y == cls].shape[0]
+                    self.likelihood[cls][col][val] = (X[(X[col] == val) & (y == cls)].shape[0] + 1) / (X[y == cls].shape[0] + len(np.unique(X[col])))
 
     def predict(self, X):
         return [self._pred_row(X.iloc[i, :]) for i in range(X.shape[0])]

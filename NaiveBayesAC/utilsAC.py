@@ -34,6 +34,16 @@ def text2df(text):
         return data
     else:
         raise ValueError('Labelled text must be a dictionary and unlabelled text must be a list.')
+    
+def discretize(df, cols=None, q=10):
+    if cols is None or not isinstance(cols, list):
+        raise ValueError('Attributes to be discretized must be specidied in a list!')
+    if not set(cols).issubset(set(df.columns)):
+        raise ValueError('Specified attributes not in the dataframe!')
+    data = df.copy()
+    for col in cols:
+        data[col] = pd.qcut(data[col], q=q, labels=False, duplicates='drop')
+    return data
 
 def splitTrainTest(x, y, train_ratio=0.8):
     '''

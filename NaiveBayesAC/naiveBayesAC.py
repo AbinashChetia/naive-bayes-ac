@@ -35,4 +35,3 @@ class NaiveBayesAC:
                     likelihood *= 1 / (len(np.unique(x[col])) + 1)
             posteriors.append(self.cls_prob[cls] * likelihood)
         return self.classes[np.argmax(posteriors)]
-
